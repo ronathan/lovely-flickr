@@ -1,0 +1,27 @@
+<h1><%= @photo.title %></h1>
+
+<%= image_tag @photo.upload_url %>
+
+<%= form_tag buy_photo_path do %>
+	<h2>Purchase a Print</h2>
+  <div>Size: 8 x 10</div>
+  <div>Price: <%= number_to_currency(Photo::PRICE / 100) %></div>
+  <div>Email: <%= text_field_tag :email %></div>
+  <script src="https://checkout.stripe.com/v2/checkout.js" class="stripe-button"
+          data-key="<%= Rails.configuration.stripe[:publishable_key] %>"
+          data-description="Print for <%= @photo.title %>"
+          data-amount="<%= Photo::PRICE %>"></script>
+<% end %>
+
+<p><%= @photo.description %></p>
+<p>Uploaded by <b><%= @photo.user.username %></b> on <%= time_ago_in_words(@photo.created_at) %>.</p>
+
+<% @photo.comments.each do |comment| %>
+  <div><%= comment.user.username %> says: <%= comment.body %></div>
+<% end %>
+
+  <h2>Add a Comment</h2>
+  <%= form_for [@photo, Comment.new] do |f| %>
+    <%= f.text_area :body %></br>
+    <%= f.submit "Post Comment" %>
+  <% end %>

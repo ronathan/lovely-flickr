@@ -1,11 +1,26 @@
 Flickr::Application.routes.draw do
   resources :comments
 
-  resources :users
+  resources :users do
+    member do
+      get 'confirm'
+    end
+  end
 
   resources :videos
 
-  resources :photos
+  resources :photos do
+    member do
+      post :buy
+    end
+    collection do
+      post "search", to: "photos#search"
+    end
+  end
+
+  resources :photos, only: [:show] do
+    resources :comments
+  end
 
   resources :sessions, only: [:new, :create, :destroy]
 

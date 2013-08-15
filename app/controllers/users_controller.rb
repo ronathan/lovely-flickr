@@ -6,11 +6,13 @@ class UsersController < ApplicationController
   def create
     @user = User.new(user_params)
     if @user.save
+      UserMailer.confirm_email(@user).deliver
       redirect_to photos_path
     else
       render action: :new
     end
   end
+
 
   private
 

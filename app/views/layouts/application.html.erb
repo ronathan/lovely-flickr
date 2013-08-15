@@ -8,6 +8,12 @@
 </head>
 <body>
 
+<h2>Search for a Flickr Photo</h2>
+<%= form_tag search_photos_path do -%>
+  <%= search_field_tag :query -%>
+  <%= submit_tag "Search" -%>
+<% end %>
+
 <%= yield %>
 
 </body>

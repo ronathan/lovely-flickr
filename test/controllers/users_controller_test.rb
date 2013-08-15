@@ -49,4 +49,19 @@ class UsersControllerTest < ActionController::TestCase
 
     return attributes
   end
+
+  test "should send an e-mail when user registers" do
+
+    ActionMailer::Base.deliveries.clear
+
+    assert_difference 'ActionMailer::Base.deliveries.size' do
+      post :create, user: { username: "ron", email: 'ron@ron.com', password: "password", password_confirmation: "password" }
+    end
+
+    confirm_email = ActionMailer::Base.deliveries.last
+ 
+    assert_equal 'Confirm your e-mail for Lovely Flickr', confirm_email.subject
+    assert_equal "ron@ron.com", confirm_email.to[0]
+  end
+
 end

@@ -19,6 +19,26 @@ class PhotosControllerTest < ActionController::TestCase
       post :create, photo: {title: "foo", description: "bar"}
     end
 
+    photo = assigns(:photo)
+    assert photo.user
     assert_redirected_to photo_path(assigns(:photo))
+  end
+
+  test "show should find a photo and render some HTML" do
+    get :show, id: photos(:one).id
+    assert_response :success
+    assert assigns(:photo)
+  end
+
+  test "should get search method" do
+    query_terms = "nice title"
+
+    photo = photos(:one)
+    photo.title = query_terms
+    photo.save
+
+    Photo.expects(:search_for).with(query_terms)
+
+    post :search, query: query_terms
   end
 end
